@@ -1,4 +1,4 @@
-# Fichier docker-compose.yml final, avec toutes les variables de production importantes exposées
+# Fichier docker-compose.yml final, avec la correction de la variable BASEROW_PUBLIC_URL
 version: "3.4"
 
 services:
@@ -7,7 +7,7 @@ services:
     restart: unless-stopped
     environment:
       BASEROW_DOMAIN: ${BASEROW_DOMAIN:?}
-      BASEROW_PUBLIC_URL: ${BASEROW_PUBLIC_URL:?}
+      BASEROW_PUBLIC_URL: ${BASEROW_PUBLIC_URL:-https://${BASEROW_DOMAIN:?}}
       PRIVATE_WEB_FRONTEND_URL: http://web-frontend:3000
       PRIVATE_BACKEND_URL: http://backend:8000
     volumes:
@@ -22,37 +22,24 @@ services:
     image: baserow/backend:1.34.2
     restart: unless-stopped
     environment:
-      # --- Variables Critiques (obligatoires) ---
-      BASEROW_PUBLIC_URL: ${BASerow_PUBLIC_URL:-https://${BASEROW_DOMAIN:?}}
+      BASEROW_PUBLIC_URL: ${BASEROW_PUBLIC_URL:-https://${BASEROW_DOMAIN:?}}
       SECRET_KEY: ${SECRET_KEY:?}
       DATABASE_PASSWORD: ${DATABASE_PASSWORD:?}
       REDIS_PASSWORD: ${REDIS_PASSWORD:?}
-
-      # --- Configuration Email (fonctionnellement critique) ---
       EMAIL_SMTP_HOST: ${EMAIL_SMTP_HOST:-}
       EMAIL_SMTP_PORT: ${EMAIL_SMTP_PORT:-587}
       EMAIL_SMTP_USE_TLS: ${EMAIL_SMTP_USE_TLS:-true}
       EMAIL_SMTP_USER: ${EMAIL_SMTP_USER:-}
       EMAIL_SMTP_PASSWORD: ${EMAIL_SMTP_PASSWORD:-}
       FROM_EMAIL: ${FROM_EMAIL:-}
-
-      # --- Configuration Recommandée en Production ---
       BASEROW_JWT_SIGNING_KEY: ${BASEROW_JWT_SIGNING_KEY:-}
       BASEROW_EXTRA_ALLOWED_HOSTS: ${BASEROW_EXTRA_ALLOWED_HOSTS:-}
-
-      # --- Stockage Fichiers S3 (Optionnel mais recommandé) ---
-      # NOTE: Si vous n'avez pas de fournisseur S3, vous pouvez en auto-héberger un comme MinIO.
-      # MinIO est disponible en tant que service installable en un clic sur Coolify.
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
       AWS_STORAGE_BUCKET_NAME: ${AWS_STORAGE_BUCKET_NAME:-}
       AWS_S3_REGION_NAME: ${AWS_S3_REGION_NAME:-}
       AWS_S3_ENDPOINT_URL: ${AWS_S3_ENDPOINT_URL:-}
-      
-      # --- Débogage (IMPORTANT: laisser à false en production) ---
       BASEROW_BACKEND_DEBUG: ${BASEROW_BACKEND_DEBUG:-false}
-
-      # --- Variables internes / avec défauts ---
       DATABASE_HOST: db
       DATABASE_NAME: ${DATABASE_NAME:-baserow}
       DATABASE_USER: ${DATABASE_USER:-baserow}
@@ -80,7 +67,6 @@ services:
     networks:
       - baserow_net
 
-  # Les services Celery héritent des mêmes variables que le backend
   celery:
     image: baserow/backend:1.34.2
     restart: unless-stopped
