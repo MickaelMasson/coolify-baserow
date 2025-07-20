@@ -32,7 +32,7 @@ services:
       # --- Configuration Email (fonctionnellement critique) ---
       EMAIL_SMTP_HOST: ${EMAIL_SMTP_HOST:-smtp.gmail.com}
       EMAIL_SMTP_PORT: ${EMAIL_SMTP_PORT:-587}
-      EMAIL_SMTP_USE_SSL: ${EMAIL_SMTP_USE_TLS:-true}
+      EMAIL_SMTP_USE_SSL: ${EMAIL_SMTP_USE_SSL:-true}
       EMAIL_SMTP_USE_TLS: ${EMAIL_SMTP_USE_TLS:-false}
       EMAIL_SMTP_USER: ${EMAIL_SMTP_USER:-email@gmail.com}
       EMAIL_SMTP_PASSWORD: ${EMAIL_SMTP_PASSWORD:-}
