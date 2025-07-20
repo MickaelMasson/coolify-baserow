@@ -1,0 +1,23 @@
+# Configuration SANS gestion SSL. Coolify s'en charge.
+# Caddy écoute en interne sur le port 80.
+http://{$BASEROW_DOMAIN}:80 {
+  # Ajout d'en-têtes de sécurité.
+  header Strict-Transport-Security "max-age=31536000;"
+  encode zstd gzip
+
+  # Si l'URL contient /api, /ws ou /media, on envoie au backend.
+  handle /api* {
+    reverse_proxy {$PRIVATE_BACKEND_URL}
+  }
+  handle /ws* {
+    reverse_proxy {$PRIVATE_BACKEND_URL}
+  }
+  handle /media* {
+    reverse_proxy {$PRIVATE_BACKEND_URL}
+  }
+
+  # Pour tout le reste, on envoie au frontend.
+  handle {
+    reverse_proxy {$PRIVATE_WEB_FRONTEND_URL}
+  }
+}
