@@ -1,4 +1,4 @@
-# Fichier docker-compose.yml final, utilisant Caddy avec un fichier de configuration stocké dans Coolify.
+# Fichier docker-compose.yml où BASEROW_PUBLIC_URL est explicitement obligatoire.
 version: "3.4"
 
 services:
@@ -11,7 +11,6 @@ services:
       PRIVATE_WEB_FRONTEND_URL: http://web-frontend:3000
       PRIVATE_BACKEND_URL: http://backend:8000
     volumes:
-      # Pointeur vers le fichier de configuration que nous allons créer dans le stockage de Coolify.
       - /data/coolify/storages/baserow/Caddyfile:/etc/caddy/Caddyfile
       - media:/baserow/media
       - caddy_data:/data
@@ -54,7 +53,6 @@ services:
     networks:
       - baserow_net
 
-  # Les services Celery et autres sont inchangés.
   celery:
     image: baserow/backend:1.34.2
     restart: unless-stopped
