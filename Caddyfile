@@ -18,9 +18,6 @@ http://{$BASEROW_DOMAIN}:80 {
   handle /mcp* {
     reverse_proxy {$PRIVATE_BACKEND_URL}
   }
-  handle /api-docs* {
-    reverse_proxy {$PRIVATE_BACKEND_URL}
-  }
 
   # Pour tout le reste, on envoie au frontend.
   handle {
